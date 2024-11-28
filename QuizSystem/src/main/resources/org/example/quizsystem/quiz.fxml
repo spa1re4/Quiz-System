@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quizsystem.QuizController">
+    <RadioButton fx:id="answer1" text="Answer 1" layoutX="50" layoutY="50" />
+    <RadioButton fx:id="answer2" text="Answer 2" layoutX="50" layoutY="100" />
+    <RadioButton fx:id="answer3" text="Answer 3" layoutX="50" layoutY="150" />
+    <RadioButton fx:id="answer4" text="Answer 4" layoutX="50" layoutY="200" />
+    <Button text="Submit" layoutX="50" layoutY="250" onAction="#submitQuiz" />
+</AnchorPane>

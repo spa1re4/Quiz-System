@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quizsystem.MainController">
+    <TextField fx:id="usernameField" layoutX="150" layoutY="100" promptText="Введите ваше имя" />
+    <Button text="Start" layoutX="150" layoutY="150" onAction="#startQuiz" />
+</AnchorPane>
