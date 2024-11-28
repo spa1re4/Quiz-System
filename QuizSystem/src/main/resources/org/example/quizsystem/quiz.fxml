@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quizsystem.QuizController">
-    <RadioButton fx:id="answer1" text="Answer 1" layoutX="50" layoutY="50" />
-    <RadioButton fx:id="answer2" text="Answer 2" layoutX="50" layoutY="100" />
-    <RadioButton fx:id="answer3" text="Answer 3" layoutX="50" layoutY="150" />
-    <RadioButton fx:id="answer4" text="Answer 4" layoutX="50" layoutY="200" />
-    <Button text="Submit" layoutX="50" layoutY="250" onAction="#submitQuiz" />
-</AnchorPane>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.quizsystem.QuizController">
+    <children>
+        <Label fx:id="questionLabel"/>
+        <VBox>
+            <RadioButton fx:id="option1" text="Option 1" toggleGroup="$answerGroup"/>
+            <RadioButton fx:id="option2" text="Option 2" toggleGroup="$answerGroup"/>
+            <RadioButton fx:id="option3" text="Option 3" toggleGroup="$answerGroup"/>
+            <RadioButton fx:id="option4" text="Option 4" toggleGroup="$answerGroup"/>
+        </VBox>
+        <Button fx:id="nextButton" text="Next" onAction="#nextQuestion"/>
+    </children>
+</VBox>

@@ -1,78 +1,90 @@
 package org.example.quizsystem;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Database {
-
     private static final String DB_URL = "jdbc:sqlite:quizsystem.db";
 
-    public static Connection connectToDatabase() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
-    }
-
-    // Создание таблицы пользователей, если она не существует
-    public static void createUsersTable(Connection conn) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS users (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT NOT NULL);";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(createTableQuery);
+    public static void initialize() {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL
+                );
+            """);
+            stmt.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS questions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    question TEXT NOT NULL,
+                    answer1 TEXT NOT NULL,
+                    answer2 TEXT NOT NULL,
+                    answer3 TEXT NOT NULL,
+                    answer4 TEXT NOT NULL,
+                    correct_answer INTEGER NOT NULL
+                );
+            """);
+            stmt.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS results (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    score INTEGER,
+                    FOREIGN KEY(user_id) REFERENCES users(id)
+                );
+            """);
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы пользователей: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Создание таблицы вопросов
-    public static void createQuestionsTable(Connection conn) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS questions (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "question TEXT NOT NULL, " +
-                "answer1 TEXT NOT NULL, " +
-                "answer2 TEXT NOT NULL, " +
-                "answer3 TEXT NOT NULL, " +
-                "answer4 TEXT NOT NULL, " +
-                "correct_answer TEXT NOT NULL);";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(createTableQuery);
+    public static int addUser(String name) {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO users (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) return keys.getInt(1);
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы вопросов: " + e.getMessage());
+            e.printStackTrace();
         }
+        return -1;
     }
 
-    // Создание таблицы результатов
-    public static void createResultsTable(Connection conn) {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS results (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "user_id INTEGER NOT NULL, " +
-                "answer TEXT NOT NULL, " +
-                "FOREIGN KEY(user_id) REFERENCES users(id));";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(createTableQuery);
+    public static List<Question> getQuestions() {
+        List<Question> questions = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM questions")) {
+            while (rs.next()) {
+                questions.add(new Question(
+                        rs.getString("question"),
+                        rs.getString("answer1"),
+                        rs.getString("answer2"),
+                        rs.getString("answer3"),
+                        rs.getString("answer4"),
+                        rs.getInt("correct_answer")
+                ));
+            }
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы результатов: " + e.getMessage());
+            e.printStackTrace();
         }
+        return questions;
     }
 
-    // Сохранение пользователя в базе данных
-    public static void saveUser(Connection conn, String username) {
-        String query = "INSERT INTO users (name) VALUES (?);";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, username);
-            pstmt.executeUpdate();
+    public static void saveResult(int userId, int score) {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO results (user_id, score) VALUES (?, ?)")) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, score);
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Ошибка при сохранении пользователя: " + e.getMessage());
-        }
-    }
-
-    // Сохранение ответа пользователя в базу данных
-    public static void saveResult(Connection conn, String answer) {
-        String query = "INSERT INTO results (user_id, answer) VALUES (?, ?);";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, 1);  // Пример ID пользователя, должен быть динамическим
-            pstmt.setString(2, answer);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Ошибка при сохранении ответа: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

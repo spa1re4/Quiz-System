@@ -1,55 +1,91 @@
 package org.example.quizsystem;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import org.example.quizsystem.Database;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
 public class QuizController {
-
-    private Connection conn;
-    private String selectedAnswer;
-
     @FXML
-    private RadioButton answer1, answer2, answer3, answer4;
-
+    private Label questionLabel;
     @FXML
-    private void initialize() throws SQLException {
-        conn = Database.connectToDatabase();
+    private RadioButton option1, option2, option3, option4;
+    @FXML
+    private ToggleGroup answerGroup;
+    @FXML
+    private Button nextButton;
 
-        // Пример вопроса, можно добавлять вопросы из базы данных
-        answer1.setText("Ответ 1");
-        answer2.setText("Ответ 2");
-        answer3.setText("Ответ 3");
-        answer4.setText("Ответ 4");
+    private int userId;
+    private List<Question> questions;
+    private int currentQuestionIndex = 0;
+    private int score = 0;
 
-        ToggleGroup group = new ToggleGroup();
-        answer1.setToggleGroup(group);
-        answer2.setToggleGroup(group);
-        answer3.setToggleGroup(group);
-        answer4.setToggleGroup(group);
+    public void initialize(int userId) {
+        this.userId = userId;
+        this.questions = Database.getQuestions();
+        if (questions.isEmpty()) {
+            questionLabel.setText("No questions available!");
+            nextButton.setDisable(true);
+        } else {
+            showQuestion();
+        }
+    }
+
+    public static void startQuizWindow(int userId, Stage currentStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(QuizController.class.getResource("Quiz.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(loader.load());
+            QuizController controller = loader.getController();
+            controller.initialize(userId);
+            stage.setScene(scene);
+            stage.setTitle("Quiz");
+            currentStage.close();
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showQuestion() {
+        Question question = questions.get(currentQuestionIndex);
+        questionLabel.setText(question.getText());
+        option1.setText(question.getOption1());
+        option2.setText(question.getOption2());
+        option3.setText(question.getOption3());
+        option4.setText(question.getOption4());
+        answerGroup.selectToggle(null);
     }
 
     @FXML
-    private void submitQuiz() {
-        // Получаем выбранный ответ
-        if (answer1.isSelected()) {
-            selectedAnswer = answer1.getText();
-        } else if (answer2.isSelected()) {
-            selectedAnswer = answer2.getText();
-        } else if (answer3.isSelected()) {
-            selectedAnswer = answer3.getText();
-        } else if (answer4.isSelected()) {
-            selectedAnswer = answer4.getText();
+    public void nextQuestion(ActionEvent event) {
+        RadioButton selectedOption = (RadioButton) answerGroup.getSelectedToggle();
+        if (selectedOption == null) {
+            System.out.println("Please select an answer!");
+            return;
         }
 
-        if (selectedAnswer != null) {
-            // Сохранение результата в базу данных
-            Database.saveResult(conn, selectedAnswer);
-            System.out.println("Ответ сохранен: " + selectedAnswer);
+        int selectedIndex = Integer.parseInt(selectedOption.getId().substring(6)); // "optionX" -> X
+        Question currentQuestion = questions.get(currentQuestionIndex);
+        if (currentQuestion.getCorrectAnswer() == selectedIndex) {
+            score++;
+        }
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.size()) {
+            showQuestion();
+        } else {
+            Database.saveResult(userId, score);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Quiz Finished");
+            alert.setHeaderText("Your Score");
+            alert.setContentText("You scored: " + score + "/" + questions.size());
+            alert.showAndWait();
+            ((Stage) nextButton.getScene().getWindow()).close();
         }
     }
 }
