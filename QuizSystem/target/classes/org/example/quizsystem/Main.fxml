@@ -1,11 +1,9 @@
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
+<?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.quizsystem.MainController">
-    <children>
-        <Label text="Enter Your Name:"/>
-        <TextField fx:id="nameField"/>
-        <Button text="Start Quiz" onAction="#startQuiz"/>
-    </children>
-</VBox>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21.0.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quizsystem.MainController">
+    <TextField fx:id="nameField" layoutX="100" layoutY="50" />
+    <Button text="Start" layoutX="100" layoutY="100" onAction="#startQuiz" />
+</AnchorPane>

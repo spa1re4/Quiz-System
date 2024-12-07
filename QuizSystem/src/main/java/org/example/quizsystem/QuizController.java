@@ -1,91 +1,66 @@
 package org.example.quizsystem;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
+import org.example.quizsystem.Question;
 
 import java.util.List;
 
 public class QuizController {
+
     @FXML
-    private Label questionLabel;
+    private AnchorPane quizPane;
+
     @FXML
     private RadioButton option1, option2, option3, option4;
-    @FXML
-    private ToggleGroup answerGroup;
-    @FXML
-    private Button nextButton;
 
-    private int userId;
+    @FXML
+    private Button submitButton, finishButton;
+
     private List<Question> questions;
     private int currentQuestionIndex = 0;
+    private int userId;
     private int score = 0;
 
-    public void initialize(int userId) {
+    public void initialize(List<Question> questions, int userId) {
+        this.questions = questions;
         this.userId = userId;
-        this.questions = Database.getQuestions();
-        if (questions.isEmpty()) {
-            questionLabel.setText("No questions available!");
-            nextButton.setDisable(true);
-        } else {
-            showQuestion();
-        }
+        showNextQuestion();
     }
 
-    public static void startQuizWindow(int userId, Stage currentStage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(QuizController.class.getResource("Quiz.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(loader.load());
-            QuizController controller = loader.getController();
-            controller.initialize(userId);
-            stage.setScene(scene);
-            stage.setTitle("Quiz");
-            currentStage.close();
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void showNextQuestion() {
+        if (currentQuestionIndex < questions.size()) {
+            Question question = questions.get(currentQuestionIndex);
+            option1.setText(question.getOption1());
+            option2.setText(question.getOption2());
+            option3.setText(question.getOption3());
+            option4.setText(question.getOption4());
         }
-    }
-
-    private void showQuestion() {
-        Question question = questions.get(currentQuestionIndex);
-        questionLabel.setText(question.getText());
-        option1.setText(question.getOption1());
-        option2.setText(question.getOption2());
-        option3.setText(question.getOption3());
-        option4.setText(question.getOption4());
-        answerGroup.selectToggle(null);
     }
 
     @FXML
-    public void nextQuestion(ActionEvent event) {
-        RadioButton selectedOption = (RadioButton) answerGroup.getSelectedToggle();
-        if (selectedOption == null) {
-            System.out.println("Please select an answer!");
-            return;
-        }
-
-        int selectedIndex = Integer.parseInt(selectedOption.getId().substring(6)); // "optionX" -> X
-        Question currentQuestion = questions.get(currentQuestionIndex);
-        if (currentQuestion.getCorrectAnswer() == selectedIndex) {
+    private void submitAnswer() {
+        Question question = questions.get(currentQuestionIndex);
+        RadioButton selectedOption = (RadioButton) new ToggleGroup().getSelectedToggle();
+        if (selectedOption != null && selectedOption.getText().equals(question.getCorrectOption())) {
             score++;
         }
-
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.size()) {
-            showQuestion();
+            showNextQuestion();
         } else {
-            Database.saveResult(userId, score);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Quiz Finished");
-            alert.setHeaderText("Your Score");
-            alert.setContentText("You scored: " + score + "/" + questions.size());
-            alert.showAndWait();
-            ((Stage) nextButton.getScene().getWindow()).close();
+            finishButton.setVisible(true);
+            submitButton.setVisible(false);
         }
+    }
+
+    @FXML
+    private void finishQuiz() {
+        String result = "Your score: " + score + "/" + questions.size();
+        DatabaseHelper.saveResult(userId, result);
+        // Close the application or show result screen
     }
 }

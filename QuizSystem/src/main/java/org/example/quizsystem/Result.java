@@ -1,19 +1,49 @@
 package org.example.quizsystem;
 
 public class Result {
-    private String userName;
-    private int correctAnswers;
+    private int resultId;
+    private int userId;
+    private int score;
+    private String date;
 
-    public Result(String userName, int correctAnswers) {
-        this.userName = userName;
-        this.correctAnswers = correctAnswers;
+    // Конструктор
+    public Result(int resultId, int userId, int score, String date) {
+        this.resultId = resultId;
+        this.userId = userId;
+        this.score = score;
+        this.date = date;
     }
 
-    public String getUserName() {
-        return userName;
+    // Геттеры и сеттеры
+    public int getResultId() {
+        return resultId;
     }
 
-    public int getCorrectAnswers() {
-        return correctAnswers;
+    public void setResultId(int resultId) {
+        this.resultId = resultId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
