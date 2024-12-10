@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="299.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quuiz.MainController">
+    <TextField fx:id="namefield" layoutX="100" layoutY="100" />
+    <Button fx:id="nextButton" layoutX="100" layoutY="150" onAction="#startQuiz" text="Start Quiz" />
+</AnchorPane>
