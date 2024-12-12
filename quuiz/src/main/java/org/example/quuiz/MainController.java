@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.quuiz.dao.UserDAO;
@@ -13,11 +12,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class MainController {
-    public Button nextButton;
     @FXML
     private TextField nameField;
 
     private UserDAO userDAO = new UserDAO();
+
     @FXML
     public void startQuiz(ActionEvent event) {
         String userName = nameField.getText();
