@@ -13,14 +13,17 @@ import org.example.quuiz.entity.User;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class QuizController {
+
     @FXML
     private Text questionText;
     @FXML
     private RadioButton answer1, answer2, answer3, answer4;
     @FXML
-    private Button nextButton, submitButton;
+    private Button nextButton, submitButton, checkButton;
 
     private List<Question> questions;
     private int currentQuestionIndex = 0;
@@ -30,6 +33,7 @@ public class QuizController {
     private ResultDAO resultDAO = new ResultDAO();
 
     private User currentUser; // Для хранения текущего пользователя
+    private Map<Integer, Integer> answers = new HashMap<>(); // Мапа для хранения ответов пользователя
 
     public void initialize() {
         try {
@@ -47,6 +51,16 @@ public class QuizController {
 
     @FXML
     public void loadNextQuestion() {
+        // Сбрасываем выбранные радиокнопки
+        answer1.setSelected(false);
+        answer2.setSelected(false);
+        answer3.setSelected(false);
+        answer4.setSelected(false);
+
+        // Делаем кнопку "Next" доступной только после выбора ответа
+        nextButton.setDisable(true);
+        checkButton.setDisable(false);
+
         if (currentQuestionIndex < questions.size()) {
             Question question = questions.get(currentQuestionIndex);
             questionText.setText(question.getQuestionText());
@@ -56,39 +70,77 @@ public class QuizController {
             answer4.setText(question.getAnswer4());
             currentQuestionIndex++;
         } else {
-            submitButton.setVisible(true);
+            submitButton.setVisible(true); // Показываем кнопку "Submit" в конце
             nextButton.setVisible(false);
+            checkButton.setVisible(false);
         }
     }
 
-    @FXML
-    public void submitQuiz(ActionEvent event) {
-        // Проверяем выбранный ответ на каждом вопросе
-        Question question = questions.get(currentQuestionIndex - 1);
-        int selectedAnswer = -1; // Изначально нет выбранного ответа
+    // Метод для сохранения ответа на текущий вопрос
+    private void saveAnswerForCurrentQuestion() {
+        int selectedAnswer = -1;
 
-        if (answer1.isSelected()) {
-            selectedAnswer = 1;
-        } else if (answer2.isSelected()) {
-            selectedAnswer = 2;
-        } else if (answer3.isSelected()) {
-            selectedAnswer = 3;
-        } else if (answer4.isSelected()) {
-            selectedAnswer = 4;
+        if (answer1.isSelected()) selectedAnswer = 1;
+        else if (answer2.isSelected()) selectedAnswer = 2;
+        else if (answer3.isSelected()) selectedAnswer = 3;
+        else if (answer4.isSelected()) selectedAnswer = 4;
+
+        if (selectedAnswer != -1) {
+            answers.put(currentQuestionIndex - 1, selectedAnswer); // Сохраняем ответ для текущего вопроса
+            System.out.println("Question " + currentQuestionIndex + " answer: " + selectedAnswer); // Отладка
+            nextButton.setDisable(false); // Разрешаем переход к следующему вопросу
+            checkButton.setDisable(true); // Отключаем кнопку "Check" после ответа
+        } else {
+            System.out.println("No answer selected for question " + currentQuestionIndex); // Отладка
+        }
+    }
+
+    // Метод для проверки всех ответов и подсчета результата
+    private void saveResults() {
+        score = 0; // Сбрасываем счётчик перед подсчётом
+
+        // Перебираем все вопросы, чтобы подсчитать результат
+        for (int i = 0; i < questions.size(); i++) {
+            Question question = questions.get(i);
+            int userAnswer = answers.getOrDefault(i, -1); // Получаем ответ пользователя, если есть
+
+            if (userAnswer != -1 && userAnswer == question.getCorrectAnswer()) {
+                score++; // Если ответ правильный, увеличиваем счёт
+            }
+            // Для отладки
+            System.out.println("Checking Question " + (i + 1) + ": User Answer = " + userAnswer + ", Correct Answer = " + question.getCorrectAnswer());
         }
 
-        // Проверяем, был ли выбран правильный ответ
-        if (selectedAnswer == question.getCorrectAnswer()) {
-            score++;
-        }
-
+        // Сохраняем результат в базе данных
         try {
-            // Сохраняем результат в базе данных
             if (currentUser != null) {
-                resultDAO.saveResult(currentUser.getId(), score);
+                resultDAO.saveResult(currentUser.getId(), score); // Сохраняем финальный результат
+                System.out.println("Final score saved: " + score); // Отладка
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // Нажатие на кнопку "Следующий" (переводит на следующий вопрос)
+    @FXML
+    public void handleNextQuestion(ActionEvent event) {
+        saveAnswerForCurrentQuestion(); // Сохраняем ответ перед переходом к следующему вопросу
+        loadNextQuestion();
+    }
+
+    // Нажатие на кнопку "Check" (сохраняет ответ)
+    // Метод для обработки завершения викторины
+    @FXML
+    public void submitQuiz(ActionEvent event) {
+        saveAnswerForCurrentQuestion(); // Сохраняем последний ответ
+        saveResults(); // Подсчитываем и сохраняем результат
+
+        // Закрываем приложение после завершения
+        System.exit(0);
+    }
+
+    public void checkAnswer(ActionEvent actionEvent) {
+        saveAnswerForCurrentQuestion();
     }
 }
