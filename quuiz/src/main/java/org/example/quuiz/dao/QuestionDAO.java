@@ -1,38 +1,31 @@
 package org.example.quuiz.dao;
 
 import org.example.quuiz.entity.Question;
-import org.example.quuiz.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionDAO {
+    private static final String URL = "jdbc:sqlite:quuuuiz.db";
 
-    // Метод для получения всех вопросов из базы данных
-    public List<Question> getAllQuestions() {
+    public List<Question> getQuestions() throws SQLException {
         List<Question> questions = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM questions";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                Question question = new Question(
-                        rs.getInt("id"),
-                        rs.getString("question_text"),
-                        rs.getString("answer1"),
-                        rs.getString("answer2"),
-                        rs.getString("answer3"),
-                        rs.getString("answer4"),
-                        rs.getInt("correct_answer")
-                );
-                questions.add(question);
+        String query = "SELECT * FROM questions";
+        try (Connection connection = DriverManager.getConnection(URL);
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                questions.add(new Question(
+                        resultSet.getInt("id"),
+                        resultSet.getString("question_text"),
+                        resultSet.getString("answer1"),
+                        resultSet.getString("answer2"),
+                        resultSet.getString("answer3"),
+                        resultSet.getString("answer4"),
+                        resultSet.getInt("correct_answer")
+                ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return questions;
     }

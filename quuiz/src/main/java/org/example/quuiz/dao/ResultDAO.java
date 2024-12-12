@@ -1,22 +1,17 @@
 package org.example.quuiz.dao;
 
-import org.example.quuiz.entity.Result;
-import org.example.quuiz.DatabaseConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.*;
 
 public class ResultDAO {
+    private static final String URL = "jdbc:sqlite:quuuuiz.db";
 
-    // Метод для сохранения результатов в базе данных
-    public void saveResult(Result result) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO results (user_id, correct_answers) VALUES (?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, result.getUserId());
-            preparedStatement.setInt(2, result.getCorrectAnswers());
-            preparedStatement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void saveResult(String userName, int score) throws SQLException {
+        String query = "INSERT INTO results (user_name, score) VALUES (?, ?)";
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userName);
+            statement.setInt(2, score);
+            statement.executeUpdate();
         }
     }
 }
