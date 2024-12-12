@@ -7,7 +7,9 @@ import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import org.example.quuiz.dao.QuestionDAO;
 import org.example.quuiz.dao.ResultDAO;
+import org.example.quuiz.dao.UserDAO;
 import org.example.quuiz.entity.Question;
+import org.example.quuiz.entity.User;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,8 +25,11 @@ public class QuizController {
     private List<Question> questions;
     private int currentQuestionIndex = 0;
     private int score = 0;
+    private UserDAO userDAO = new UserDAO();
     private QuestionDAO questionDAO = new QuestionDAO();
     private ResultDAO resultDAO = new ResultDAO();
+
+    private User currentUser; // Для хранения текущего пользователя
 
     public void initialize() {
         try {
@@ -33,6 +38,11 @@ public class QuizController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // Этот метод вызывается из MainController для установки пользователя
+    public void setUser(User user) {
+        this.currentUser = user;
     }
 
     @FXML
@@ -53,9 +63,30 @@ public class QuizController {
 
     @FXML
     public void submitQuiz(ActionEvent event) {
-        String userName = "someUserName"; // Это имя, которое было введено в MainController
+        // Проверяем выбранный ответ на каждом вопросе
+        Question question = questions.get(currentQuestionIndex - 1);
+        int selectedAnswer = -1; // Изначально нет выбранного ответа
+
+        if (answer1.isSelected()) {
+            selectedAnswer = 1;
+        } else if (answer2.isSelected()) {
+            selectedAnswer = 2;
+        } else if (answer3.isSelected()) {
+            selectedAnswer = 3;
+        } else if (answer4.isSelected()) {
+            selectedAnswer = 4;
+        }
+
+        // Проверяем, был ли выбран правильный ответ
+        if (selectedAnswer == question.getCorrectAnswer()) {
+            score++;
+        }
+
         try {
-            resultDAO.saveResult(userName, score);
+            // Сохраняем результат в базе данных
+            if (currentUser != null) {
+                resultDAO.saveResult(currentUser.getId(), score);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
