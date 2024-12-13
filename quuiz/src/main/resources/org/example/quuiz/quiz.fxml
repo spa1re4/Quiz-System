@@ -2,11 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quuiz.QuizController">
+<AnchorPane prefHeight="400.0" prefWidth="685.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.quuiz.QuizController">
    <children>
       <RadioButton fx:id="answer1" layoutX="44.0" layoutY="82.0" mnemonicParsing="false" text="Option1" />
       <RadioButton fx:id="answer2" layoutX="44.0" layoutY="110.0" mnemonicParsing="false" text="Option2" />
@@ -22,5 +24,10 @@
       <Button fx:id="nextButton" layoutX="30.0" layoutY="232.0" mnemonicParsing="false" onAction="#loadNextQuestion" text="Next Question" />
       <Button fx:id="checkButton" layoutX="151.0" layoutY="232.0" onAction="#checkAnswer" text="Check" />
       <Button fx:id="submitButton" layoutX="230.0" layoutY="232.0" mnemonicParsing="false" onAction="#submitQuiz" prefHeight="25.0" prefWidth="95.0" text="Submit" />
+      <ImageView fx:id="imageView2" fitHeight="190.0" fitWidth="249.0" layoutX="388.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../Downloads/5.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

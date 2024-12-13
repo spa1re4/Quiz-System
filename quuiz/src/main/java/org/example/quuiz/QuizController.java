@@ -3,6 +3,8 @@ package org.example.quuiz;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import org.example.quuiz.dao.QuestionDAO;
@@ -17,7 +19,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class QuizController {
-
+    @FXML
+    private ImageView imageView2;
     @FXML
     private Text questionText;
     @FXML
@@ -42,13 +45,22 @@ public class QuizController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // Проверка пути к изображению
+        String imagePath = getClass().getResource("5.png").toExternalForm();
+        if (imagePath == null) {
+            System.err.println("Image not found");
+        } else {
+            Image image = new Image(imagePath);
+            imageView2.setImage(image);
+        }
     }
+
 
     // Этот метод вызывается из MainController для установки пользователя
     public void setUser(User user) {
         this.currentUser = user;
     }
-
     @FXML
     public void loadNextQuestion() {
         // Сбрасываем выбранные радиокнопки
