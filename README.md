@@ -106,9 +106,13 @@ Contributions are welcome! Please follow these steps:
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
+![Снимок экрана 2024-12-14 142811](https://github.com/user-attachments/assets/1c276181-82e5-4f9d-ac62-fd56ae9fdd45)
+![Снимок экрана 2024-12-14 142815](https://github.com/user-attachments/assets/2f0915dc-ced3-484c-b93a-a2952c1c6bf2)
+![Снимок экрана 2024-12-14 142824](https://github.com/user-attachments/assets/018c3d13-49ab-4bab-baf8-f2525d3ae879)
+![Снимок экрана 2024-12-14 142835](https://github.com/user-attachments/assets/3f2edffd-bd0c-4ef6-ad25-fc4ca2f72700)
+![Снимок экрана 2024-12-14 142839](https://github.com/user-attachments/assets/ade901ec-964e-43f5-bdef-70ed58f134c4)
+![Снимок экрана 2024-12-14 142859](https://github.com/user-attachments/assets/023ce7b9-57d6-45e1-8775-f3e7a13404cd)
+![Снимок экрана 2024-12-14 142911](https://github.com/user-attachments/assets/a9cf5c67-8f2a-4473-b5ce-835a34fb6160)
+![Снимок экрана 2024-12-14 142947](https://github.com/user-attachments/assets/9a152716-3ece-46c4-8a80-584c3f43b312)
 
-## Contact
-For any questions or suggestions, feel free to contact:
-- **Developer**: [Your Name]
-- **Email**: [Your Email]
 
