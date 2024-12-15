@@ -1,11 +1,8 @@
 package org.example.quuiz.entity;
-
 public class Result {
     private int id;
     private String userName;
     private int score;
-
-    // Конструктор, геттеры и сеттеры
     public Result(int id, String userName, int score) {
         this.id = id;
         this.userName = userName;

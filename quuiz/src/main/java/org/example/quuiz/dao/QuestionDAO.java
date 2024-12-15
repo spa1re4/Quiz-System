@@ -8,7 +8,6 @@ import java.util.List;
 
 public class QuestionDAO {
     private static final String URL = "jdbc:sqlite:quuuuiz.db";
-
     public List<Question> getQuestions() throws SQLException {
         List<Question> questions = new ArrayList<>();
         String query = "SELECT * FROM questions";

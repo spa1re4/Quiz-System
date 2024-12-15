@@ -1,5 +1,4 @@
 package org.example.quuiz.entity;
-
 public class Question {
     private int id;
     private String questionText;
@@ -8,8 +7,6 @@ public class Question {
     private String answer3;
     private String answer4;
     private int correctAnswer;
-
-    // Конструктор, геттеры и сеттеры
     public Question(int id, String questionText, String answer1, String answer2, String answer3, String answer4, int correctAnswer) {
         this.id = id;
         this.questionText = questionText;

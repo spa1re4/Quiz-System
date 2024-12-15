@@ -19,39 +19,29 @@ public class MainController {
     private TextField nameField;
 
     @FXML
-    private ImageView imageView;  // Добавляем ImageView, чтобы связать его с FXML
+    private ImageView imageView;
 
     private UserDAO userDAO = new UserDAO();
 
     // Метод для инициализации
     @FXML
     public void initialize() {
-        // Загрузка изображения
         String imagePath = getClass().getResource("2.jpg").toExternalForm();
         Image image = new Image(imagePath);
-        imageView.setImage(image);  // Устанавливаем изображение в ImageView
+        imageView.setImage(image);
     }
 
     @FXML
     public void startQuiz(ActionEvent event) {
         String userName = nameField.getText();
         try {
-            // Сохраняем имя пользователя в базе данных
             userDAO.saveUser(userName);
-
-            // Получаем пользователя из базы данных
             User currentUser = userDAO.getUserByName(userName);
-
             if (currentUser != null) {
-                // Переход на quiz.fxml
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz.fxml"));
                 Scene quizScene = new Scene(loader.load());
                 QuizController quizController = loader.getController();
-
-                // Передаем пользователя в QuizController
                 quizController.setUser(currentUser);
-
-                // Меняем сцену на quiz.fxml
                 Stage stage = (Stage) nameField.getScene().getWindow();
                 stage.setScene(quizScene);
             }
