@@ -68,31 +68,15 @@ The SQLite database (`quuuuiz.db`) consists of three tables:
    ```
 
 ## How to Run the Project
-
-1. **Setup Database**:
-   - Ensure that the `quuuuiz.db` SQLite database is created with the schema provided above.
-   - Populate the `questions` table with quiz questions.
-
-2. **Clone the Repository**:
-   ```bash
-   git clone <repository_url>
-   cd quiz-application
-   ```
-
-3. **Compile and Run**:
-   - Open the project in your favorite IDE (e.g., IntelliJ IDEA or Eclipse).
-   - Ensure all dependencies (JavaFX, SQLite) are configured.
-   - Run the `QuizApplication` class.
-
-4. **Usage**:
    - Enter your name on the main screen and click "Start Quiz."
    - Answer the questions displayed and proceed using the "Next" button.
    - At the end of the quiz, click "Submit" to save your results.
 
-Team Members List
-[Akylbekov Chyngyz ] - Project Lead and Developer
-[Begimkulov Adakhan] - Lead of presentation
-[Tynybekov Nurtai] - Tester
+
+##Team Members List
+- Akylbekov Chyngyz  - Project Lead and Developer
+- Begimkulov Adakhan - Lead of presentation
+- Tynybekov Nurtai - Tester
 
 
 ## License
