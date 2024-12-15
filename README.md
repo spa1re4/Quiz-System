@@ -89,20 +89,11 @@ The SQLite database (`quuuuiz.db`) consists of three tables:
    - Answer the questions displayed and proceed using the "Next" button.
    - At the end of the quiz, click "Submit" to save your results.
 
-## Screenshots
-1. **Main Screen**:
-   - User enters their name and starts the quiz.
+Team Members List
+[Akylbekov Chyngyz ] - Project Lead and Developer
+[Begimkulov Adakhan] - Lead of presentation
+[Tynybekov Nurtai] - Tester
 
-2. **Quiz Screen**:
-   - Questions are displayed one at a time, with multiple-choice options.
-
-## Contribution
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m 'Add feature-name'`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a pull request.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
